@@ -43,8 +43,8 @@ const UploadFile = () => {
   }
   console.log(frmdetails);
   sendFile(frmdetails)
-   alert("hi");
-   setfilename("Attach you files here")
+  alert("File added");
+  setfilename("Attach you files here")
 
   }
 

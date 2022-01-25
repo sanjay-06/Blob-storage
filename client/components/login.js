@@ -27,7 +27,7 @@ const Login = () => {
           let resp=await res
           if(resp.status == 200)
           {
-            window.location.href="/upload"
+            window.location.href="/files"
           }
           else if(resp.status == 404)
           {
@@ -96,7 +96,7 @@ const Login = () => {
                     </form>
                     <p className="w-full mt-4 text-sm text-center text-gray-500">
                     Don't have an account?{" "}
-                    <a href="#_" className="text-blue-500 underline">
+                    <a href="/signup" className="text-blue-500 underline">
                         Sign up here
                     </a>
                     </p>

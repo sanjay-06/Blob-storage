@@ -1,10 +1,10 @@
-import UploadFile from 'components/Uploadfile'
+import FileList from 'components/FileList'
 import Navbar from 'components/Navbar'
 export default function Uploadpage() {
   return (
     <>
      <Navbar />
-     <UploadFile />
+     <FileList />
     </>
 
   )

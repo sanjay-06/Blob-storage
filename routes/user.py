@@ -1,6 +1,5 @@
 import jwt
 from fastapi import APIRouter, Depends,Form
-from matplotlib.pyplot import connect
 from models.OAuth2 import oauth
 from models.user import User
 from config.db import collection

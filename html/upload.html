@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Tailwind CSS -->
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+
+    <title>Tailwind CSS CDN</title>
+  </head>
+  <body>
+    <nav class="bg-gray-800">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+          <div class="relative flex items-center justify-between h-16">
+            <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+              <!-- Mobile menu button-->
+              <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+              <div class="flex-shrink-0 flex items-center">
+                <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow">
+                <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow">
+              </div>
+              <div class="hidden sm:block sm:ml-6">
+                <div class="flex space-x-4">
+                  <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                  <a href="/files" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Files</a>
+
+                  <a href="/upload" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Upload</a>
+
+                  <a href="/permission" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Permissions</a>
+
+                </div>
+              </div>
+            </div>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full">
+                    Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="sm:hidden" id="mobile-menu">
+          <div class="px-2 pt-2 pb-3 space-y-1">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Dashboard</a>
+
+            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Team</a>
+
+            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
+
+            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Calendar</a>
+          </div>
+        </div>
+      </nav>
+
+    <div class="py-20 h-screen bg-gray-300 px-2">
+        <form action="/submitform" method="post" enctype="multipart/form-data">
+        <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden md:max-w-lg">
+          <div class="md:flex">
+            <div class="w-full px-4 py-6 ">
+              <div class="mb-1">
+
+                <span class="text-sm">Title</span>
+                <input
+                  type="text"
+                  name="title"
+                  class="h-12 px-3 w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600"
+                  required
+                />
+              </div>
+              <div class="mb-1 pt-4">
+
+                <span class="text-sm">Add Users and their permissions</span>
+                    <select class="w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600" multiple>
+                      <option value='blue'>Blue</option>
+                      <option value='green'>Green</option>
+                      <option value='red'>Red</option>
+                      <option value='yellow'>Yellow</option>
+                      <option value='orange'>Orange</option>
+                    </select>
+              </div>
+              <div class="mb-1">
+
+                <span>Attachments</span>
+                <div class="relative h-32 rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex justify-center items-center">
+                  <div class="absolute">
+                    <div class="flex flex-col items-center">
+
+                      <i class="fa fa-folder-open fa-3x text-blue-700" />
+                      <span class="block text-gray-400 font-normal" id="fileadd">
+                            Add Files
+                      </span>
+                    </div>
+                  </div>
+                  <input type="file" class="h-full w-full opacity-0" id="filename" name="upload_file" required/>
+                </div>
+              </div>
+              <div class="mt-3 text-right">
+
+                <button type="clear border-none">Cancel</button>
+                <button type="submit" class="ml-2 h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700">
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+
+      </div>
+      <!-- <form method="post" action="/submitform" class="mt-20">
+            <input type="text" name="assignment">
+            <input type="submit">
+      </form> -->
+  </body>
+</html>

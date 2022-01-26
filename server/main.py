@@ -5,14 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "localhost:3000"
 ]
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 @app.get("/")
@@ -35,7 +38,7 @@ async def getInfo(info : Request):
     print(req_info)
     return {
         "status" : "SUCCESS",
-        "StatusCode" : 404,
+        "StatusCode" : 200,
         "value":"hi"
     }
 

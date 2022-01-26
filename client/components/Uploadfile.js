@@ -20,7 +20,6 @@ const UploadFile = () => {
   }
 
   async function sendFile(frmdetails) {
-    console.log(frmdetails)
     const res = fetch(`http://localhost:8000/sendFile`, {
       method: 'POST',
       headers: {
@@ -30,8 +29,20 @@ const UploadFile = () => {
         formData: frmdetails
       })
     })
-    let resp=await res
-    console.log(resp)
+    let resp=(await res).json()
+    resp.then(
+      function(result) {
+
+        if(result.StatusCode==200)
+        {
+          alert("ok")
+        }
+        else
+        {
+          alert(404)
+        }
+     }
+    )
   }
 
   const handleSubmit=() =>{

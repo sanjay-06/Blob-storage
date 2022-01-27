@@ -1,5 +1,6 @@
-from models.Session import cookie
-from models.Basicverifier import verifier
+from uuid import UUID
+from models.Session import SessionData, cookie
+from models.Basicverifier import backend
 from fastapi import APIRouter, Depends,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,File,UploadFile,Form
 from fastapi.templating import Jinja2Templates
-from models.Session import cookie,backend
+from models.Session import cookie
 
 from fastapi.responses import FileResponse
 

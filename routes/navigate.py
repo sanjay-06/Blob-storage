@@ -1,12 +1,12 @@
 import jwt
-from uuid import UUID
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
-from models.Basicverifier import backend
 from fastapi import APIRouter, Depends,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from models.Basicverifier import verifier
+from config.db import permission
+from schemas.permission import permissionsEntity
 
 navigator=APIRouter()
 templates=Jinja2Templates(directory="html")
@@ -30,12 +30,25 @@ def write_home(request : Request):
 
 #     return user
 
+def merge(list1,list2):
+    return list1+list(set(list2)-set(list1))
 
 @navigator.get("/files",response_class=HTMLResponse,dependencies=[Depends(cookie)])
-# def write_home(request : Request = Depends(get_token)):
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
-    return templates.TemplateResponse("files.html",{"request":request,"username":payload['email']})
+    email=payload['email']
+    result=permission.find_one({"username":email})
+
+    if result == None:
+        return {"message":"error"}
+
+    file=permissionsEntity(result)
+
+    listreadwrite=merge(file['read'],file['write'])
+
+    finallist=merge(listreadwrite,file['execute'])
+
+    return templates.TemplateResponse("files.html",{"request":request,"username":email,"result":finallist})
 
 @navigator.get("/permission",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):

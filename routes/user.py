@@ -1,4 +1,4 @@
-import jwt
+import jwt,pymongo
 from uuid import UUID
 from fastapi import APIRouter, Depends,Form, Response
 from models.OAuth2 import oauth
@@ -54,8 +54,13 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
 async def create_user(email:str= Form(...),password:str=Form(...)):
     hashed_password=Hasher.get_password_hash(password=password)
     user_obj=User.get_userobj(email=email,password=hashed_password)
-    collection.insert_one(user_obj)
-    return "SUCCESS"
+    result={"message":"success","statuscode":200}
+    try:
+        collection.insert_one(user_obj)
+    except pymongo.errors.DuplicateKeyError:
+        result={"message":"user already exists","statuscode":409}
+
+    return result
 
 @user.put('/{id}')
 async def update_user(id,email:str= Form(...),password:str=Form(...)):

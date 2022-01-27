@@ -1,6 +1,6 @@
-from models.Session import cookie,backend
+from models.Session import cookie
 from models.Basicverifier import verifier
-from fastapi import APIRouter, Depends,Request,HTTPException,status
+from fastapi import APIRouter, Depends,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 navigator=APIRouter()

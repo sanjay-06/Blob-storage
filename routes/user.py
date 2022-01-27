@@ -15,8 +15,6 @@ from models.Basicverifier import verifier
 
 user=APIRouter()
 
-# oauthobj = oauth()
-
 @user.get('/database/file')
 async def find_all_users():
     print(usersEntity(collection.find()))
@@ -48,19 +46,10 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
 
      session = uuid4()
      print(session)
-     data = SessionData(username=token)
+     data = SessionData(user_token=token)
      await backend.create(session, data)
      cookie.attach_to_response(response, session)
-
-    #  oauthobj.set_token(token)
-
      return {"access_token":token,"token_type":"bearer"}
-
-
-# @user.post('/')
-# async def index(token:str=Depends(oauth.get_oauthscheme())):
-#     return {'the_token':token}
-
 
 @user.post('/register')
 async def create_user(email:str= Form(...),password:str=Form(...)):

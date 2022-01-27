@@ -5,7 +5,7 @@ from fastapi_sessions.backends.implementations import InMemoryBackend
 
 
 class SessionData(BaseModel):
-    username: str
+    user_token: str
 
 cookie_params = CookieParameters()
 

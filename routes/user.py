@@ -12,6 +12,7 @@ from bson import objectid
 from uuid import uuid4
 from models.Session import cookie,backend
 from models.Basicverifier import verifier
+from fastapi.responses import RedirectResponse
 
 user=APIRouter()
 
@@ -25,7 +26,7 @@ async def del_session(response: Response, session_id: UUID = Depends(cookie)):
     print(session_id)
     await backend.delete(session_id)
     cookie.delete_from_response(response)
-    return "deleted session"
+    return RedirectResponse("/")
 
 @user.get("/whoami", dependencies=[Depends(cookie)])
 async def whoami(session_data: SessionData = Depends(verifier)):
@@ -41,11 +42,9 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
      if not Hasher.verify_password(password,result["password"]):
          return {"message":"Invalid password","statuscode":401}
 
-     user_obj=User.get_userobj(email=email,password=password)
-     token=jwt.encode(user_obj,oauth.get_jwtsecret())
+     token=jwt.encode({"email":email},oauth.get_jwtsecret())
 
      session = uuid4()
-     print(session)
      data = SessionData(user_token=token)
      await backend.create(session, data)
      cookie.attach_to_response(response, session)

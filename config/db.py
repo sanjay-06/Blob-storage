@@ -8,3 +8,5 @@ db= conn.get_database('cloudwiry')
 
 collection = db.usercredentials
 
+permission = db.permissions
+

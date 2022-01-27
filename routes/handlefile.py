@@ -1,12 +1,13 @@
-from fastapi import APIRouter,File,UploadFile,Form
+from fastapi import APIRouter, Depends,File,UploadFile,Form
 from fastapi.templating import Jinja2Templates
+from models.Session import cookie,backend
 
 from fastapi.responses import FileResponse
 
 filerouter=APIRouter()
 templates=Jinja2Templates(directory="html")
 
-@filerouter.post("/submitform")
+@filerouter.post("/submitform", dependencies=[Depends(cookie)])
 async def handle_form(title:str= Form(...), upload_file:UploadFile = File(...)):
     file_location = f"files/{upload_file.filename}"
     with open(file_location, "wb+") as file_object:
@@ -14,7 +15,7 @@ async def handle_form(title:str= Form(...), upload_file:UploadFile = File(...)):
     return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
 
 
-@filerouter.get("/file/{id}")
+@filerouter.get("/file/{id}", dependencies=[Depends(cookie)])
 async def send_file(id:str):
     file_location = f"files/{id}"
     return FileResponse(file_location, media_type='application/octet-stream', filename=id)

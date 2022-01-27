@@ -1,0 +1,42 @@
+[{
+"text1.txt":{
+   "users": [{
+        "email":"san692001@gmail.com",
+        "permission":"read"
+    },
+    {
+        "email":"san692001@gmail.com",
+        "permission":"write"
+    },
+    {
+        "email":"san692001@gmail.com",
+        "permission":"execute"
+    }],
+    "filelocation":""
+}
+},
+{
+    "text2.txt":{
+    "users": [{
+         "email":"san692001@gmail.com",
+         "permission":"read"
+     }
+    ],
+     "filelocation":""
+ }
+},
+{
+    "text3.txt":{
+        "users": [{
+             "email":"san692001@gmail.com",
+             "permission":"read"
+         },
+         {
+             "email":"san692001@gmail.com",
+             "permission":"write"
+         }
+        ],
+         "filelocation":""
+     }
+}
+]

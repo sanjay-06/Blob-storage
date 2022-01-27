@@ -11,3 +11,7 @@ x=permission.insert_one({"username":"san692001@gmail.com", "read":["text1.txt","
     "execute":["text1.txt","text2.txt","text3.txt"]})
 
 print(x)
+
+
+# print("Last modified: %s" % )
+# print("Created: %s" % )

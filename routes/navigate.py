@@ -1,4 +1,4 @@
-import jwt
+import jwt,os.path, time
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
 from fastapi import APIRouter, Depends,Request
@@ -48,7 +48,11 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 
     finallist=merge(listreadwrite,file['execute'])
 
-    return templates.TemplateResponse("files.html",{"request":request,"username":email,"result":finallist})
+    result=[]
+    for file in finallist:
+        result.append([file,time.ctime(os.path.getmtime("files/"+file)),time.ctime(os.path.getctime("files/"+file))])
+
+    return templates.TemplateResponse("files.html",{"request":request,"username":email,"result":result})
 
 @navigator.get("/permission",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):

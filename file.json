@@ -1,6 +1,7 @@
-{
+[{
     "username":"san692001@gmail.com",
     "read":["text1.txt","text2.txt","text3.txt"],
     "write":["text1.txt","text2.txt","text3.txt"],
     "execute":["text1.txt","text2.txt","text3.txt"]
 }
+]

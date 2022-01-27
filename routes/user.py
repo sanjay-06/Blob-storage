@@ -35,11 +35,11 @@ async def whoami(session_data: SessionData = Depends(verifier)):
 async def login(response:Response,email:str = Form(...),password:str = Form(...)):
      queryresult=collection.find_one({"email":email})
      if queryresult == None:
-          return {"message":"user not found"}
+          return {"message":"user not found","statuscode":404}
 
      result=userEntity(queryresult)
      if not Hasher.verify_password(password,result["password"]):
-         return {"message":"Invalid password"}
+         return {"message":"Invalid password","statuscode":401}
 
      user_obj=User.get_userobj(email=email,password=password)
      token=jwt.encode(user_obj,oauth.get_jwtsecret())
@@ -49,7 +49,7 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
      data = SessionData(user_token=token)
      await backend.create(session, data)
      cookie.attach_to_response(response, session)
-     return {"access_token":token,"token_type":"bearer"}
+     return {"access_token":token,"token_type":"bearer","statuscode":200}
 
 @user.post('/register')
 async def create_user(email:str= Form(...),password:str=Form(...)):

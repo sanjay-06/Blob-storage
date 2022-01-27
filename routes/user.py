@@ -49,4 +49,3 @@ async def update_user(id,email:str= Form(...),password:str=Form(...)):
         "$set":dict(User.get_userobj(email=email,password=password))
     })
     return userEntity(collection.find_one({"_id":objectid(id)}))
-

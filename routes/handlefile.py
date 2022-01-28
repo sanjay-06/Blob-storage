@@ -87,11 +87,15 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
     return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 @filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])
-async def handle_form(file:str,textarea:str=Form(...)):
+async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
     path="files/"+file
     f = open(path, "w")
     f.write(textarea)
     f.close()
+
+    if file != filetitle:
+        path1="files/"+filetitle
+        os.rename(path,path1)
 
 
 

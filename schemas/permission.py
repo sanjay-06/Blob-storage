@@ -4,7 +4,7 @@ def permissionsEntity(item) -> dict:
         "username":item["username"],
         "read":permissionEntity(item["read"]),
         "write":permissionEntity(item["write"]),
-        "execute":permissionEntity(item["execute"])
+        "owner":permissionEntity(item["owner"])
     }
 
 

@@ -5,15 +5,20 @@ from models.Session import cookie
 
 from fastapi.responses import FileResponse
 
+from models.permission import Permission
+
 filerouter=APIRouter()
 templates=Jinja2Templates(directory="html")
 
-@filerouter.post("/submitform", dependencies=[Depends(cookie)])
+@filerouter.post("/upload_file", dependencies=[Depends(cookie)])
 async def handle_form(select: List[str] = Form(...), upload_file:UploadFile = File(...)):
-    print(select)
-    file_location = f"files/{upload_file.filename}"
+    filename=upload_file.filename
+    file_location = f"files/{filename}"
     with open(file_location, "wb+") as file_object:
         file_object.write(upload_file.file.read())
+
+    Permission.addpermissions(select,filename)
+
     return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
 
 

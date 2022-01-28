@@ -1,4 +1,6 @@
 import jwt,os.path, time
+
+from config.db import collection
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
 from fastapi import APIRouter, Depends,Request
@@ -7,6 +9,7 @@ from fastapi.responses import HTMLResponse
 from models.Basicverifier import verifier
 from config.db import permission
 from schemas.permission import permissionsEntity
+from schemas.user import usersEntity
 
 navigator=APIRouter()
 templates=Jinja2Templates(directory="html")
@@ -46,7 +49,7 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 
     listreadwrite=merge(file['read'],file['write'])
 
-    finallist=merge(listreadwrite,file['execute'])
+    finallist=merge(listreadwrite,file['owner'])
 
     result=[]
     for file in finallist:
@@ -62,7 +65,13 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 @navigator.get("/upload",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
-    return templates.TemplateResponse("upload.html",{"request":request,"username":payload['email']})
+    userlist=usersEntity(collection.find())
+    listval=[]
+    for user in userlist:
+        if(payload['email']!=user['email']):
+            listval.append(user['email'])
+    print(listval)
+    return templates.TemplateResponse("upload.html",{"request":request,"username":payload['email'],"users":listval})
 
 @navigator.get("/signup",response_class=HTMLResponse)
 def write_home(request : Request):

@@ -72,29 +72,32 @@
       </nav>
 
     <div class="py-20 h-screen bg-gray-300 px-2">
-        <form action="/submitform" method="post" enctype="multipart/form-data">
+        <form action="/upload_file" method="post" enctype="multipart/form-data">
         <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden md:max-w-lg">
           <div class="md:flex">
             <div class="w-full px-4 py-6 ">
               <div class="mb-1">
 
-                <span class="text-sm">Title</span>
+                <span class="text-sm">File owner</span>
                 <input
                   type="text"
                   name="title"
                   class="h-12 px-3 w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600"
-                  required
+                  value={{username}}
+
+                  disabled
+
                 />
               </div>
               <div class="mb-1 pt-4">
 
                 <span class="text-sm">Add Users and their permissions</span>
                     <select class="w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600" name="select" multiple>
-                      <option value='blue'>Blue</option>
-                      <option value='green'>Green</option>
-                      <option value='red'>Red</option>
-                      <option value='yellow'>Yellow</option>
-                      <option value='orange'>Orange</option>
+                      {% for user in users%}
+                      <option value="{{user+'-read'}}">{{user+" - read"}}</option>
+                      <option value="{{user+'-write'}}">{{user+" - write"}}</option>
+                      <option value="{{user+'-owner'}}">{{user+" - owner"}}</option>
+                      {% endfor %}
                     </select>
               </div>
               <div class="mb-1">

@@ -60,7 +60,19 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 @navigator.get("/permission",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
-    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email']})
+
+    queryresult=permission.find_one({"username":payload['email']})
+
+    if queryresult== None:
+        return {"message":"error not found","statuscode":404}
+
+    queryresult=permissionsEntity(queryresult)
+
+    owner=list(queryresult['owner'])
+
+    print(owner)
+
+    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email'],"ownership":owner})
 
 @navigator.get("/upload",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):

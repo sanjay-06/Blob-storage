@@ -25,7 +25,7 @@
                 <div class="flex space-x-4">
                   <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
 
-                  <a href="/writefiles" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Back to write Files</a>
+                  <a href="/writefiles" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Back to Edit Files</a>
 
                   <a href="/writefile/{{filename}}" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{filename}}</a>
 
@@ -77,12 +77,15 @@
   </div>
       <form class="flex flex-col items-center justify-center" method="post" action="/modifyfile/{{filename}}">
 
+
      <div class="w-10/12 mt-10">
-        <input type="text" name="filetitle" placeholder="filename" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow focus:outline-none focus:ring w-full" value="{{filename}}"/>
+
+
+        <input type="text" name="filetitle" placeholder="filename" class="mt-1 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow focus:outline-none focus:ring w-full" value="{{filename}}"/>
 
      </div>
-
-        <textarea class="resize-none rounded-md mt-16 border-2 h-full w-10/12 p-4" id="textarea" name="textarea">{{file}}</textarea>
+      <span class="font-bold text-lg mt-10">File contents</span>
+        <textarea class="mt-1 resize-none rounded-md border-2 h-full w-10/12 p-4" id="textarea" name="textarea">{{file}}</textarea>
         <div class="flex flex-row items-center justify-center space-x-4">
             <button class="mt-2 block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-800" type="submit" onclick="call()">
               Modify

@@ -90,3 +90,33 @@ f = open("files/text1.txt", "r")
 file=f.read()
 
 print(file)
+
+def replace(element1,element2,listval):
+    return list(map(lambda x: x.replace(element1, element2), listval))
+
+
+file="text1.txt"
+filetitle="Text1.txt"
+allpermission=permission.find()
+
+for filepermission in allpermission:
+
+    if file in filepermission['read']:
+        filepermission['read']=replace(file,filetitle,filepermission['read'])
+
+    if file in filepermission['write']:
+        filepermission['write']=replace(file,filetitle,filepermission['write'])
+
+    if file in filepermission['owner']:
+        filepermission['owner']=replace(file,filetitle,filepermission['owner'])
+
+    filepermission.pop('_id')
+
+    newquery={"$set":filepermission}
+
+    permission.update_one({"username":filepermission['username']},newquery)
+
+
+
+
+

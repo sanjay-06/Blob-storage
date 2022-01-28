@@ -10,3 +10,7 @@ def permissionsEntity(item) -> dict:
 
 def permissionEntity(entity) -> list:
     return [item for item in entity]
+
+
+def replacelist(element1,element2,listval) -> list:
+        return list(map(lambda x: x.replace(element1, element2), listval))

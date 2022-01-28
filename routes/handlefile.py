@@ -1,17 +1,16 @@
-import jwt
+import jwt, os,time
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
-from matplotlib.pyplot import text
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
-import os,time
 from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
 from models.permission import Permission
 from models.Basicverifier import verifier
 from config.db import permission
-from schemas.permission import permissionsEntity
+from schemas.permission import permissionsEntity,replacelist
+
 
 filerouter=APIRouter()
 templates=Jinja2Templates(directory="html")
@@ -97,10 +96,21 @@ async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
         path1="files/"+filetitle
         os.rename(path,path1)
 
+    allpermission=permission.find()
 
+    for filepermission in allpermission:
 
-@filerouter.get("/home")
-def write():
-    return {
-        "Name" : "sanjay"
-    }
+        if file in filepermission['read']:
+            filepermission['read']=replacelist(file,filetitle,filepermission['read'])
+
+        if file in filepermission['write']:
+            filepermission['write']=replacelist(file,filetitle,filepermission['write'])
+
+        if file in filepermission['owner']:
+            filepermission['owner']=replacelist(file,filetitle,filepermission['owner'])
+
+        filepermission.pop('_id')
+
+        newquery={"$set":filepermission}
+
+        permission.update_one({"username":filepermission['username']},newquery)

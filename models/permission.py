@@ -11,7 +11,7 @@ class Permission(BaseModel):
     owner:List = []
 
     @staticmethod
-    def get_permissionobj(username,read,write,owner):
+    def get_permissionobj(username,read=[],write=[],owner=[]):
         return {"username":username,"read":read,"write":write,"owner":owner}
 
     @staticmethod

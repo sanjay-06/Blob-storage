@@ -70,9 +70,14 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 
     owner=list(queryresult['owner'])
 
-    print(owner)
+    userlist=usersEntity(collection.find())
+    listval=[]
+    for user in userlist:
+        if(payload['email']!=user['email']):
+            listval.append(user['email'])
+    print(listval)
 
-    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email'],"ownership":owner})
+    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email'],"ownership":owner,"users":listval})
 
 @navigator.get("/upload",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):

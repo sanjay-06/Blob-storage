@@ -3,8 +3,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends,Form, Response
 from models.OAuth2 import oauth
 from models.Session import SessionData
+from models.permission import Permission
 from models.user import User
-from config.db import collection
+from config.db import collection,permission
 from schemas.user import userEntity,usersEntity
 from models.hasher import Hasher
 from models.OAuth2 import oauth
@@ -60,6 +61,7 @@ async def create_user(email:str= Form(...),password:str=Form(...)):
     except pymongo.errors.DuplicateKeyError:
         result={"message":"user already exists","statuscode":409}
 
+    permission.insert_one(Permission.get_permissionobj(username=email))
     return result
 
 @user.put('/{id}')

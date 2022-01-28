@@ -1,12 +1,12 @@
 import jwt
 from typing import List
-from fastapi import APIRouter, Depends,File,UploadFile,Form
+from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
-
+import os,time
 from fastapi.responses import FileResponse
-
+from fastapi.responses import HTMLResponse
 from models.permission import Permission
 from models.Basicverifier import verifier
 from config.db import permission
@@ -68,6 +68,14 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
     permission.update_one({"username":select},newquery)
 
     # return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
+
+@filerouter.get("/readfile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
+async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
+    payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
+    path="files/"+file
+    f = open(path, "r")
+    files=f.read()
+    return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 @filerouter.get("/home")
 def write():

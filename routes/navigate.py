@@ -93,3 +93,15 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 @navigator.get("/signup",response_class=HTMLResponse)
 def write_home(request : Request):
     return templates.TemplateResponse("signup.html",{"request":request})
+
+
+@navigator.get("/readfiles",response_class=HTMLResponse,dependencies=[Depends(cookie)])
+def show_read_files(request:Request,session_data:SessionData=Depends(verifier)):
+    payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=["HS256"])
+    queryresult=permission.find_one({"username":payload['email']})
+    if queryresult==None:
+        return {"message":"error","statuscode":405}
+
+    queryresult=permissionsEntity(queryresult)
+    return templates.TemplateResponse("Read.html",{"request":request,"username":payload['email'],"readfiles":queryresult['read']})
+

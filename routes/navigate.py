@@ -103,7 +103,10 @@ def show_read_files(request:Request,session_data:SessionData=Depends(verifier)):
         return {"message":"error","statuscode":405}
 
     queryresult=permissionsEntity(queryresult)
-    return templates.TemplateResponse("Read.html",{"request":request,"username":payload['email'],"readfiles":queryresult['read']})
+
+    listval=merge(queryresult['owner'],queryresult['read'])
+
+    return templates.TemplateResponse("Read.html",{"request":request,"username":payload['email'],"readfiles":listval})
 
 @navigator.get("/writefiles",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def show_write_files(request:Request,session_data:SessionData=Depends(verifier)):

@@ -2,6 +2,7 @@ import jwt
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
+from matplotlib.pyplot import text
 from models.OAuth2 import oauth
 from models.Session import SessionData, cookie
 import os,time
@@ -76,6 +77,23 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
     f = open(path, "r")
     files=f.read()
     return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+
+@filerouter.get("/writefile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
+async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
+    payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
+    path="files/"+file
+    f = open(path, "r")
+    files=f.read()
+    return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+
+@filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])
+async def handle_form(file:str,textarea:str=Form(...)):
+    path="files/"+file
+    f = open(path, "w")
+    f.write(textarea)
+    f.close()
+
+
 
 @filerouter.get("/home")
 def write():

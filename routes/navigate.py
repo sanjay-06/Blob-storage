@@ -105,3 +105,14 @@ def show_read_files(request:Request,session_data:SessionData=Depends(verifier)):
     queryresult=permissionsEntity(queryresult)
     return templates.TemplateResponse("Read.html",{"request":request,"username":payload['email'],"readfiles":queryresult['read']})
 
+@navigator.get("/writefiles",response_class=HTMLResponse,dependencies=[Depends(cookie)])
+def show_write_files(request:Request,session_data:SessionData=Depends(verifier)):
+    payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=["HS256"])
+    queryresult=permission.find_one({"username":payload['email']})
+    if queryresult==None:
+        return {"message":"error","statuscode":405}
+
+    queryresult=permissionsEntity(queryresult)
+    listval=merge(queryresult['owner'],queryresult['write'])
+
+    return templates.TemplateResponse("write.html",{"request":request,"username":payload['email'],"writefiles":listval})

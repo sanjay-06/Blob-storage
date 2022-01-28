@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="../static/styles.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <title>Tailwind CSS CDN</title>
+
   </head>
   <body>
-
     <nav class="bg-gray-800">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <div class="relative flex items-center justify-between h-16">
@@ -35,15 +35,10 @@
               <div class="hidden sm:block sm:ml-6">
                 <div class="flex space-x-4">
                   <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                  <a href="/files" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Files</a>
 
-                  <a href="/upload" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Upload</a>
+                  <a href="/writefiles" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Back to write Files</a>
 
-                  <a href="/permission" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Permissions</a>
-
-                  <a href="/readfiles" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Read</a>
-
-                  <a href="/writefiles" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Edit</a>
+                  <a href="/writefile/{{filename}}" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{filename}}</a>
 
                 </div>
               </div>
@@ -74,30 +69,47 @@
           </div>
         </div>
       </nav>
-
-    <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-5">
-        {% for file in writefiles %}
-        <a href="/writefile/{{file}}">
-            <div class=" w-full lg:max-w-full lg:flex">
-            <div class="border-r border border-l border-gray-400 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-                <div class="mb-8">
-                <div class="text-gray-900 font-bold text-xl mb-2 filetitle">{{file}}</div>
-                <p class="text-gray-700 text-base">click me to read the files which can only be read if you have read access</p>
-                </div>
-                <div class="flex flex-row items-center">
-                <img class="w-10 h-10 rounded-full mr-4" src="static/file.png" alt="Avatar of Writer">
-                <div class="text-sm">
-                    <p class="text-gray-900 leading-none">{{username}}</p>
-                    <p class="text-gray-600">read,write</p>
-                </div>
-                </div>
-                <div>
-                </div>
-
-            </div>
-            </div>
-        </a>
-        {% endfor %}
+      <!-- This example requires Tailwind CSS v2.0+ -->
+<div class="mt-10 ml-32 lg:flex lg:items-center lg:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        {{filename}}
+      </h2>
+      <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <!-- Heroicon name: solid/briefcase -->
+          <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
+            <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+          </svg>
+          Read Access and Write Access
+        </div>
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+          </svg>
+          Server/files/{{filename}}
+        </div>
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <!-- Heroicon name: solid/calendar -->
+          <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+          </svg>
+          {{time}}
+        </div>
+      </div>
     </div>
+  </div>
+      <form class="flex flex-col items-center justify-center" method="post" action="/modifyfile/{{filename}}">
+        <textarea class="resize-none rounded-md mt-16 border-2 h-full w-10/12 p-4" id="textarea" name="textarea">{{file}}</textarea>
+        <div class="flex flex-row items-center justify-center space-x-4">
+            <button class="mt-2 block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-800" type="submit" onclick="call()">
+              Modify
+            </button>
+            <button class="mt-2 block text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-500 dark:focus:ring-red-800" type="clear" onclick="()=>{{{file:''}}}">
+              clear
+            </button>
+        </div>
+      </form>
   </body>
 </html>

@@ -98,6 +98,8 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     email=payload['email']
 
+    os.remove("files/"+file)
+
     queryresult=permission.find_one({"username":email})
 
     if queryresult == None:

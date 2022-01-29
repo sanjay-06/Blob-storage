@@ -22,6 +22,9 @@ class Permission(BaseModel):
 
             if user in userdict:
                 userdict[user].append(permissionval)
+
+                userdict[user]=list(set(userdict[user]))
+
             else:
                 userdict[user]=[permissionval]
 

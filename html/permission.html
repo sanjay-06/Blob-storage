@@ -147,7 +147,7 @@
               </div>
               <!-- Modal body -->
               <div class="pt-3 space-y-6">
-                <form class="w-full max-w-sm" class="adduserpermission" id="adduserpermission">
+                <form class="w-full max-w-sm"  class="adduserpermission" id="adduserpermission">
                   <div class="md:flex md:items-center mb-6">
                     <div class="md:w-1/3">
                       <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name"> Filename </label>
@@ -250,7 +250,6 @@
       $(document).ready(function(){
   $("#adduserpermission").submit(function(e){
 
-    alert("came")
     var that=$(this)
     e.preventDefault()
     url="/addpermission",
@@ -260,9 +259,17 @@
     that.find('[name]').each(function(index,value){
         var that=$(this)
         name=that.attr('name')
+
         value=that.val()
-        data[name]=value;
+        if (name=="read" || name=="edit" || name=="owner")
+           data[name]=$("input[name="+name+"]:checked").val();
+        else
+           data[name]=value
     })
+
+
+    alert(data)
+    console.log(data)
 
     $.ajax({
         url:url,

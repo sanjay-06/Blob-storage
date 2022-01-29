@@ -109,7 +109,6 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
     for user in userlist:
         if(payload['email']!=user['email']):
             listval.append(user['email'])
-    print(listval)
     return templates.TemplateResponse("upload.html",{"request":request,"username":payload['email'],"users":listval})
 
 @navigator.get("/signup",response_class=HTMLResponse)

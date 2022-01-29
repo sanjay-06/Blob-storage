@@ -154,9 +154,9 @@ col=db.usercredentials
 # 4) fix returns
 
 
-# x = permission.delete_many({})
+x = permission.delete_many({})
 
-# col.delete_many({})
+col.delete_many({})
 
 # a=['san692001@gmail.com-read,san692001@gmail.com-write,san692001@gmail.com-owner,19pw28@psgtech.ac.in-owner']
 
@@ -164,5 +164,7 @@ col=db.usercredentials
 
 # print(listval)
 
-import imghdr
-print(imghdr.what('check.py'))
+# import
+# print(imghdr.what('check.py'))
+
+

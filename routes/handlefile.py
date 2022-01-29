@@ -1,4 +1,4 @@
-import jwt, os,time
+import jwt, os,time,imghdr
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
@@ -11,6 +11,7 @@ from models.Basicverifier import verifier
 from config.db import permission
 from routes.navigate import merge
 from schemas.permission import permissionsEntity,replacelist
+from pymediainfo import MediaInfo
 
 
 filerouter=APIRouter()
@@ -71,6 +72,10 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
         return {"message":"error"}
 
     queryresult=permissionsEntity(queryresult)
+
+    print(read)
+    print(edit)
+    print(owner)
 
     if read=="yes":
         queryresult["read"].append(filename)
@@ -142,13 +147,19 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     exe=(os.path.splitext(file)[1])
     print(exe)
-    if( exe != ".png" or exe !=".jpeg" or exe !=".mp4" or exe != ".mkv" or exe != ".avi" or exe != ".mov"):
-        path="files/"+file
-        f = open(path, "r")
-        files=f.read()
-        return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
-    print(file)
-    return templates.TemplateResponse("showimage.html",{"request":request,"image":file})
+    path="files/"+file
+    print(imghdr.what(path))
+    fileInfo = MediaInfo.parse(path)
+    for track in fileInfo.tracks:
+        if track.track_type == "Video":
+            return templates.TemplateResponse("showimage.html",{"request":request,"video":path})
+        if imghdr.what(path) == None:
+            f = open(path, "r")
+            files=f.read()
+            return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+
+    print(path)
+    return templates.TemplateResponse("showimage.html",{"request":request,"image":path})
 
 @filerouter.get("/writefile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):

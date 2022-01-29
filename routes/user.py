@@ -52,7 +52,7 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
      return {"access_token":token,"token_type":"bearer","statuscode":200}
 
 @user.post('/register')
-async def create_user(email:str= Form(...),password:str=Form(...)):
+async def create_user(response:Response,email:str= Form(...),password:str=Form(...)):
     hashed_password=Hasher.get_password_hash(password=password)
     user_obj=User.get_userobj(email=email,password=hashed_password)
     result={"message":"success","statuscode":200}
@@ -62,6 +62,12 @@ async def create_user(email:str= Form(...),password:str=Form(...)):
         result={"message":"user already exists","statuscode":409}
 
     permission.insert_one(Permission.get_permissionobj(username=email))
+    token=jwt.encode({"email":email},oauth.get_jwtsecret())
+
+    session = uuid4()
+    data = SessionData(user_token=token)
+    await backend.create(session, data)
+    cookie.attach_to_response(response, session)
     return result
 
 @user.put('/{id}')

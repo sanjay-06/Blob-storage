@@ -17,13 +17,13 @@ class Permission(BaseModel):
     @staticmethod
     def addpermissions(userlist,filename):
         userdict={}
+
+        userlist=userlist[0].strip("'").split(",")
         for permissions in userlist:
             user,permissionval=permissions.split("-")
 
             if user in userdict:
                 userdict[user].append(permissionval)
-
-                userdict[user]=list(set(userdict[user]))
 
             else:
                 userdict[user]=[permissionval]
@@ -46,10 +46,13 @@ class Permission(BaseModel):
                 for value in permissions[i]:
                     if value=='read':
                         read.append(filename)
+                        read=list(set(read))
                     elif value=='write':
                         write.append(filename)
+                        write=list(set(write))
                     else:
                         exe.append(filename)
+                        exe=list(set(exe))
                 query=Permission.get_permissionobj(user,read,write,exe)
 
                 permission.insert_one(query)
@@ -59,9 +62,10 @@ class Permission(BaseModel):
                 for value in permissions[i]:
                     if value in queryresult:
                         queryresult[value].append(filename)
+                        queryresult[value]=list(set(queryresult[value]))
                     else:
                         queryresult[value]=[filename]
-
+                        queryresult[value]=list(set(queryresult[value]))
 
                 queryresult.pop('id')
 

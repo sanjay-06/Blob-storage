@@ -22,12 +22,14 @@ async def handle_form(select: List[str] = Form(...), upload_file:UploadFile = Fi
     with open(file_location, "wb+") as file_object:
         file_object.write(upload_file.file.read())
 
+    print(upload_file)
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     email=payload['email']
-    select.append(email+"-owner")
+    select[0]=select[0]+","+email+"-owner"
+    print(select)
     Permission.addpermissions(select,filename)
 
-    return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
+    return {"message":"success","statuscode":200}
 
 
 @filerouter.get("/file/{id}", dependencies=[Depends(cookie)])
@@ -182,3 +184,5 @@ async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
         newquery={"$set":filepermission}
 
         permission.update_one({"username":filepermission['username']},newquery)
+
+    return {"message":"ok","statuscode":200}

@@ -9,6 +9,8 @@ db=conn.get_database("cloudwiry")
 
 permission=db.permissions
 
+col=db.usercredentials
+
 # x=permission.insert_one({"username":"san692001@gmail.com", "read":["text1.txt","text2.txt","text3.txt"],
 #     "write":["text1.txt","text2.txt","text3.txt"],
 #     "execute":["text1.txt","text2.txt","text3.txt"]})
@@ -136,12 +138,12 @@ permission=db.permissions
 
 # print(perm)
 
-list1=[1,2,3]
+# list1=[1,2,3]
 
-list1.remove(1)
+# list1.remove(1)
 
-print(list1)
-#Todo
+# print(list1)
+# #Todo
 
 # 1) delete user permissions
 
@@ -152,3 +154,12 @@ print(list1)
 # 4) fix returns
 
 
+x = permission.delete_many({})
+
+col.delete_many({})
+
+# a=['san692001@gmail.com-read,san692001@gmail.com-write,san692001@gmail.com-owner,19pw28@psgtech.ac.in-owner']
+
+# listval=a[0].strip("'").split(",")
+
+# print(listval)

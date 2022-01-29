@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse
 from models.permission import Permission
 from models.Basicverifier import verifier
 from config.db import permission
+from routes.navigate import merge
 from schemas.permission import permissionsEntity,replacelist
 
 
@@ -53,6 +54,8 @@ async def send_file(filepermission:str=Form(...)):
         print(queryresult[access])
         queryresult[access].remove(file)
 
+    queryresult.pop("id")
+
     newquery={"$set":queryresult}
 
     permission.update_one({"username":user},newquery)
@@ -68,8 +71,6 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
         return {"message":"error"}
 
     queryresult=permissionsEntity(queryresult)
-
-    print(queryresult)
 
     if read=="yes":
         queryresult["read"].append(filename)
@@ -91,7 +92,7 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
 
     permission.update_one({"username":select},newquery)
 
-    # return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
+    return {"message":"error","statuscode":200}
 
 
 @filerouter.get("/deletefile/{file}", dependencies=[Depends(cookie)])
@@ -109,8 +110,10 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
 
     queryresult=permissionsEntity(queryresult)
 
+    mergequery=merge(queryresult['owner'],queryresult['write'])
 
-    for filename in queryresult['owner']:
+
+    for filename in mergequery:
         if(filename == file):
             allpermission=permission.find()
 

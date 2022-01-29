@@ -63,9 +63,21 @@ class Permission(BaseModel):
                     if value in queryresult:
                         queryresult[value].append(filename)
                         queryresult[value]=list(set(queryresult[value]))
+                        if(value=='write'):
+                            if(len(queryresult['read'])<1):
+                                queryresult['read']=[filename]
+                            else:
+                                queryresult['read'].append(filename)
+                                queryresult['read']=list(set(queryresult['read']))
                     else:
                         queryresult[value]=[filename]
                         queryresult[value]=list(set(queryresult[value]))
+                        if(value=='write'):
+                            if(len(queryresult['read'])<1):
+                                queryresult['read']=[filename]
+                            else:
+                                queryresult['read'].append(filename)
+                                queryresult['read']=list(set(queryresult['read']))
 
                 queryresult.pop('id')
 

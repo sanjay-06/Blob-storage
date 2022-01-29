@@ -79,8 +79,9 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
 
     allpermissions=permission.find()
 
+    deluser=merge(owner,queryresult['write'])
     perm=[]
-    for filename in owner:
+    for filename in deluser:
         for per in allpermissions:
             for e in per['read']:
                 if e == filename:

@@ -35,6 +35,28 @@ async def send_file(id:str):
     file_location = f"files/{id}"
     return FileResponse(file_location, media_type='application/octet-stream', filename=id)
 
+@filerouter.post("/removepermission", dependencies=[Depends(cookie)])
+async def send_file(filepermission:str=Form(...)):
+    user,file,access=filepermission.split("-")
+    queryresult=permission.find_one({"username":user})
+    if queryresult == None:
+        return {"message":"error" , "statuscode":404}
+
+    queryresult=permissionsEntity(queryresult)
+
+    if access=="edit":
+        print(queryresult["write"])
+        queryresult["write"].remove(file)
+    else:
+        print(queryresult[access])
+        queryresult[access].remove(file)
+
+    newquery={"$set":queryresult}
+
+    permission.update_one({"username":user},newquery)
+
+    return {"message":"success","statuscode":200}
+
 @filerouter.post("/addpermission", dependencies=[Depends(cookie)])
 async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = Form(...),edit:str= Form(...),owner:str=Form(...)):
 
@@ -69,13 +91,57 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
 
     # return {"info": f"file '{upload_file.filename}' saved at '{file_location}'"}
 
+
+@filerouter.get("/deletefile/{file}", dependencies=[Depends(cookie)])
+async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
+
+    payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
+    email=payload['email']
+
+    queryresult=permission.find_one({"username":email})
+
+    if queryresult == None:
+        return {"message":"error"}
+
+    queryresult=permissionsEntity(queryresult)
+
+
+    for filename in queryresult['owner']:
+        if(filename == file):
+            allpermission=permission.find()
+
+            for filepermission in allpermission:
+
+                if file in filepermission['read']:
+                    filepermission['read'].remove(file)
+
+                if file in filepermission['write']:
+                    filepermission['write'].remove(file)
+
+                if file in filepermission['owner']:
+                    filepermission['owner'].remove(file)
+
+                filepermission.pop('_id')
+
+                newquery={"$set":filepermission}
+
+                permission.update_one({"username":filepermission['username']},newquery)
+
+    return {"message":"success","statuscode":200}
+
+
 @filerouter.get("/readfile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
-    path="files/"+file
-    f = open(path, "r")
-    files=f.read()
-    return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    exe=(os.path.splitext(file)[1])
+    print(exe)
+    if( exe != ".png" or exe !=".jpeg" or exe !=".mp4" or exe != ".mkv" or exe != ".avi" or exe != ".mov"):
+        path="files/"+file
+        f = open(path, "r")
+        files=f.read()
+        return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    print(file)
+    return templates.TemplateResponse("showimage.html",{"request":request,"image":file})
 
 @filerouter.get("/writefile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):

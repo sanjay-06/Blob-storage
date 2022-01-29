@@ -85,38 +85,70 @@ permission=db.permissions
 
 # {'username': 'john@gmail.com', 'read': {'text1.txt', 'chat.png', 'customers.png'}, 'write': [], 'owner': []}
 
-f = open("files/text1.txt", "r")
+# f = open("files/text1.txt", "r")
 
-file=f.read()
+# file=f.read()
 
-print(file)
+# print(file)
 
-def replace(element1,element2,listval):
-    return list(map(lambda x: x.replace(element1, element2), listval))
-
-
-file="text1.txt"
-filetitle="Text1.txt"
-allpermission=permission.find()
-
-for filepermission in allpermission:
-
-    if file in filepermission['read']:
-        filepermission['read']=replace(file,filetitle,filepermission['read'])
-
-    if file in filepermission['write']:
-        filepermission['write']=replace(file,filetitle,filepermission['write'])
-
-    if file in filepermission['owner']:
-        filepermission['owner']=replace(file,filetitle,filepermission['owner'])
-
-    filepermission.pop('_id')
-
-    newquery={"$set":filepermission}
-
-    permission.update_one({"username":filepermission['username']},newquery)
+# def replace(element1,element2,listval):
+#     return list(map(lambda x: x.replace(element1, element2), listval))
 
 
+# file="text1.txt"
+# filetitle="Text1.txt"
+# allpermission=permission.find()
 
+# for filepermission in allpermission:
+
+#     if file in filepermission['read']:
+#         filepermission['read']=replace(file,filetitle,filepermission['read'])
+
+#     if file in filepermission['write']:
+#         filepermission['write']=replace(file,filetitle,filepermission['write'])
+
+#     if file in filepermission['owner']:
+#         filepermission['owner']=replace(file,filetitle,filepermission['owner'])
+
+#     filepermission.pop('_id')
+
+#     newquery={"$set":filepermission}
+
+#     permission.update_one({"username":filepermission['username']},newquery)
+
+# allpermissions=[{'username':'s','read':["1.txt"],'write':[],'owner':[]}]
+# owner=["1.txt","2.txt","3.txt"]
+# perm=[]
+# for filename in owner:
+#     for per in allpermissions:
+#         for e in per['read']:
+#             if e == filename:
+#                 perm.append(per['username']+"-"+filename+"-"+"read")
+
+#         for e in per['write']:
+#             if e == filename:
+#                 perm.append(per['username']+"-"+filename+"-"+'edit')
+
+#         for e in per['owner']:
+#             if e == filename:
+#                 perm.append(per['username']+"-"+filename+"-"+'owner')
+
+
+# print(perm)
+
+list1=[1,2,3]
+
+list1.remove(1)
+
+print(list1)
+#Todo
+
+# 1) delete user permissions
+
+# 2) delete file
+
+# 3) ajax request
+
+# 4) fix returns
 
 

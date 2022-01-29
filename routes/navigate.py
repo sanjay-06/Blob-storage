@@ -77,7 +77,28 @@ def write_home(request : Request,session_data: SessionData = Depends(verifier)):
             listval.append(user['email'])
     print(listval)
 
-    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email'],"ownership":owner,"users":listval})
+    allpermissions=permission.find()
+
+    perm=[]
+    for filename in owner:
+        for per in allpermissions:
+            for e in per['read']:
+                if e == filename:
+                    perm.append(per['username']+"-"+filename+"-"+"read")
+
+            for e in per['write']:
+                if e == filename:
+                    perm.append(per['username']+"-"+filename+"-"+'edit')
+
+            for e in per['owner']:
+                if e == filename:
+                    perm.append(per['username']+"-"+filename+"-"+'owner')
+
+
+
+    print(perm)
+
+    return templates.TemplateResponse("permission.html",{"request":request,"username":payload['email'],"ownership":owner,"users":listval,"removefile":perm})
 
 @navigator.get("/upload",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):

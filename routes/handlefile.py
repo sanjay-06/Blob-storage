@@ -1,4 +1,4 @@
-import jwt, os,time,imghdr
+import jwt, os,time,imghdr,gzip
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
@@ -21,8 +21,9 @@ templates=Jinja2Templates(directory="html")
 async def handle_form(select: List[str] = Form(...), upload_file:UploadFile = File(...),session_data: SessionData = Depends(verifier)):
     filename=upload_file.filename
     file_location = f"files/{filename}"
-    with open(file_location, "wb+") as file_object:
-        file_object.write(upload_file.file.read())
+    with gzip.open(file_location, "wb+") as file_object:
+        content=upload_file.file.read()
+        file_object.write(content)
 
     print(upload_file)
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
@@ -38,6 +39,7 @@ async def handle_form(select: List[str] = Form(...), upload_file:UploadFile = Fi
 async def send_file(id:str):
     file_location = f"files/{id}"
     return FileResponse(file_location, media_type='application/octet-stream', filename=id)
+
 
 @filerouter.post("/removepermission", dependencies=[Depends(cookie)])
 async def send_file(filepermission:str=Form(...)):
@@ -154,9 +156,9 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
         if track.track_type == "Video":
             return templates.TemplateResponse("showimage.html",{"request":request,"video":path})
         if imghdr.what(path) == None:
-            f = open(path, "r")
+            f = gzip.open(path, "rb")
             files=f.read()
-            return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+            return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files.decode(),"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
     print(path)
     return templates.TemplateResponse("showimage.html",{"request":request,"image":path})
@@ -165,15 +167,15 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     path="files/"+file
-    f = open(path, "r")
-    files=f.read()
+    f = gzip.open(path, "rb")
+    files=f.read().decode()
     return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 @filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])
 async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
     path="files/"+file
-    f = open(path, "w")
-    f.write(textarea)
+    f = gzip.open(path, "wb+")
+    f.write(textarea.encode())
     f.close()
 
     if file != filetitle:

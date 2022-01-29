@@ -56,19 +56,23 @@ async def create_user(response:Response,email:str= Form(...),password:str=Form(.
     hashed_password=Hasher.get_password_hash(password=password)
     user_obj=User.get_userobj(email=email,password=hashed_password)
     result={"message":"success","statuscode":200}
-    try:
+
+    user=userEntity(collection.find_one({"email":email}))
+
+    if user == None:
         collection.insert_one(user_obj)
-    except pymongo.errors.DuplicateKeyError:
-        result={"message":"user already exists","statuscode":409}
+        permission.insert_one(Permission.get_permissionobj(username=email))
+        token=jwt.encode({"email":email},oauth.get_jwtsecret())
 
-    permission.insert_one(Permission.get_permissionobj(username=email))
-    token=jwt.encode({"email":email},oauth.get_jwtsecret())
+        session = uuid4()
+        data = SessionData(user_token=token)
+        await backend.create(session, data)
+        cookie.attach_to_response(response, session)
+        return result
+    else:
+        return {"message":"user already exists","statuscode":409}
 
-    session = uuid4()
-    data = SessionData(user_token=token)
-    await backend.create(session, data)
-    cookie.attach_to_response(response, session)
-    return result
+
 
 @user.put('/{id}')
 async def update_user(id,email:str= Form(...),password:str=Form(...)):

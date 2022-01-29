@@ -59,7 +59,9 @@
 </section>
 <script>
 $(document).ready(function(){
-  $("form.login").submit(function(){
+  $("form.login").submit(function(e){
+
+    e.preventDefault()
     var that=$(this)
     url="/login",
     type="post",

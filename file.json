@@ -1,7 +1,0 @@
-[{
-    "username":"san692001@gmail.com",
-    "read":["text1.txt","text2.txt","text3.txt"],
-    "write":["text1.txt","text2.txt","text3.txt"],
-    "owner":["text1.txt","text2.txt","text3.txt"]
-}
-]

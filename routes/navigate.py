@@ -19,19 +19,6 @@ templates=Jinja2Templates(directory="html")
 def write_home(request : Request):
     return templates.TemplateResponse("index.html",{"request":request})
 
-# async def get_token(token:str = Depends(oauthobj.get_token())):
-#     try:
-#         payload=jwt.decode(token,oauth.get_jwtsecret(),algorithms=['HS256'])
-#         user = payload.email
-#         print(payload)
-
-#     except:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="invalid email"
-#             )
-
-#     return user
 
 def merge(list1,list2):
     return list1+list(set(list2)-set(list1))

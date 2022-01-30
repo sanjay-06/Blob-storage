@@ -19,9 +19,9 @@ class Permission(BaseModel):
         userdict={}
 
         userlist=userlist[0].strip("'").split(",")
+        userlist=list(set(userlist))
         for permissions in userlist:
             user,permissionval=permissions.split("-")
-
             if user in userdict:
                 userdict[user].append(permissionval)
 

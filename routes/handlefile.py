@@ -28,6 +28,9 @@ async def handle_form(select: List[str] = Form(...), upload_file:UploadFile = Fi
     print(upload_file)
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     email=payload['email']
+    if select[0]=='None':
+        select.pop(0)
+        select.append(email+"-owner")
     select[0]=select[0]+","+email+"-owner"
     print(select)
     Permission.addpermissions(select,filename)

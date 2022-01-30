@@ -111,7 +111,8 @@
               <div class="mb-1 pt-4">
 
                 <span class="text-sm">Add Users and their permissions</span>
-                    <select class="w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600" name="select" id="select" multiple>
+                    <select class="w-full border-blue-400 border-2 rounded focus:outline-none focus:border-blue-600" name="select" id="select" multiple required>
+                      <option value="None">No access to anyone</option>
                       {% for user in users%}
                       <option value="{{user+'-read'}}">{{user+" - read"}}</option>
                       <option value="{{user+'-write'}}">{{user+" - write"}}</option>

@@ -41,11 +41,11 @@ pip install -r requirements.txt
 <br>
 
 
-### The starting page of the project is given by as screenshot
-
 ![auth](screenshots/authentication.png)
 
+### The starting page of the project is given by as screenshot
 <hr>
+<br>
 
 ```
 Login Page of the interface

@@ -1,4 +1,4 @@
-import jwt,pymongo
+import jwt,os,shutil
 from uuid import UUID
 from fastapi import APIRouter, Depends,Form, Response
 from models.OAuth2 import oauth
@@ -27,6 +27,7 @@ async def del_session(response: Response, session_id: UUID = Depends(cookie)):
     print(session_id)
     await backend.delete(session_id)
     cookie.delete_from_response(response)
+    shutil.rmtree("files/extract")
     return RedirectResponse("/")
 
 @user.get("/whoami", dependencies=[Depends(cookie)])
@@ -49,6 +50,8 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
      data = SessionData(user_token=token)
      await backend.create(session, data)
      cookie.attach_to_response(response, session)
+     if not os.path.isdir("files/extract"):
+        os.mkdir("files/extract")
      return {"access_token":token,"token_type":"bearer","statuscode":200}
 
 @user.post('/register')
@@ -57,7 +60,7 @@ async def create_user(response:Response,email:str= Form(...),password:str=Form(.
     user_obj=User.get_userobj(email=email,password=hashed_password)
     result={"message":"success","statuscode":200}
 
-    user=userEntity(collection.find_one({"email":email}))
+    user=collection.find_one({"email":email})
 
     if user == None:
         collection.insert_one(user_obj)
@@ -68,6 +71,8 @@ async def create_user(response:Response,email:str= Form(...),password:str=Form(.
         data = SessionData(user_token=token)
         await backend.create(session, data)
         cookie.attach_to_response(response, session)
+        if not os.path.isdir("files/extract"):
+            os.mkdir("files/extract")
         return result
     else:
         return {"message":"user already exists","statuscode":409}
@@ -80,4 +85,3 @@ async def update_user(id,email:str= Form(...),password:str=Form(...)):
         "$set":dict(User.get_userobj(email=email,password=password))
     })
     return userEntity(collection.find_one({"_id":objectid(id)}))
-

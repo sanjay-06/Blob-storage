@@ -43,6 +43,18 @@ async def send_file(id:str):
     file_location = f"files/{id}"
     return FileResponse(file_location, media_type='application/octet-stream', filename=id)
 
+@filerouter.get("/file/extract/{id}", dependencies=[Depends(cookie)])
+async def send_file(id:str):
+    path=f"files/{id}"
+    f = gzip.open(path, "rb")
+    files=f.read().decode()
+    f.close()
+    file_location = f"files/extract/{id}"
+    f=open(file_location,"w")
+    f.write(files)
+    f.close()
+    return FileResponse(file_location, media_type='application/octet-stream', filename=id)
+
 
 @filerouter.post("/removepermission", dependencies=[Depends(cookie)])
 async def send_file(filepermission:str=Form(...)):
@@ -53,12 +65,18 @@ async def send_file(filepermission:str=Form(...)):
 
     queryresult=permissionsEntity(queryresult)
 
+    if access=="read":
+        queryresult["read"].remove(file)
+
+
     if access=="edit":
-        print(queryresult["write"])
+        queryresult["read"].remove(file)
         queryresult["write"].remove(file)
-    else:
-        print(queryresult[access])
-        queryresult[access].remove(file)
+
+    if access=="owner":
+        queryresult["read"].remove(file)
+        queryresult["write"].remove(file)
+        queryresult["owner"].remove(file)
 
     queryresult.pop("id")
 
@@ -88,10 +106,16 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
 
 
     if edit=="yes":
+        queryresult["read"].append(filename)
         queryresult["write"].append(filename)
+        queryresult["read"]=list(set(queryresult["read"]))
         queryresult["write"]=list(set(queryresult["write"]))
 
     if owner=="yes":
+        queryresult["read"].append(filename)
+        queryresult["write"].append(filename)
+        queryresult["read"]=list(set(queryresult["read"]))
+        queryresult["write"]=list(set(queryresult["write"]))
         queryresult["owner"].append(filename)
         queryresult["owner"]=list(set(queryresult["owner"]))
 
@@ -110,8 +134,6 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
 
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     email=payload['email']
-
-    os.remove("files/"+file)
 
     queryresult=permission.find_one({"username":email})
 
@@ -144,6 +166,8 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
 
                 permission.update_one({"username":filepermission['username']},newquery)
 
+        os.remove("files/"+file)
+
     return {"message":"success","statuscode":200}
 
 
@@ -170,9 +194,16 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     path="files/"+file
-    f = gzip.open(path, "rb")
-    files=f.read().decode()
-    return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    fileInfo = MediaInfo.parse(path)
+    for track in fileInfo.tracks:
+        if track.track_type == "Video":
+            return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+        if imghdr.what(path) == None:
+            f = gzip.open(path, "rb")
+            files=f.read().decode()
+            return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+
 
 @filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])
 async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):

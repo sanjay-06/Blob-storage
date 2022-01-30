@@ -27,6 +27,7 @@ def merge(list1,list2):
 def write_home(request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     email=payload['email']
+
     result=permission.find_one({"username":email})
 
     if result == None:

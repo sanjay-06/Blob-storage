@@ -1,4 +1,4 @@
-import jwt, os,time,imghdr,gzip,shutil
+import jwt, os,time,gzip,shutil
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates

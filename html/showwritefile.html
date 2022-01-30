@@ -91,13 +91,11 @@
       </div>
     </div>
   </div>
-      <form class="flex flex-col items-center justify-center modify" name="modify" class="modify" action="/modifyfile/{{filename}}">
+      <form class="flex flex-col items-center justify-center modify mt-10" name="modify" class="modify" action="/modifyfile/{{filename}}">
+        <span class="font-bold text-center">Change Filename</span>
+     <div class="w-10/12">
 
-
-     <div class="w-10/12 mt-10">
-
-
-        <input type="text" name="filetitle" placeholder="filename" class="mt-1 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow focus:outline-none focus:ring w-full" value="{{filename}}"/>
+        <input type="text" name="filetitle" placeholder="filename" class="mt-1 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-2 shadow focus:outline-none focus:ring w-full" value="{{filename}}"/>
 
      </div>
       <span class="font-bold text-lg mt-10">File contents</span>

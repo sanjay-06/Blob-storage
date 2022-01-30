@@ -1,4 +1,4 @@
-import jwt, os,time,imghdr,gzip
+import jwt, os,time,imghdr,gzip,shutil
 from typing import List
 from fastapi import APIRouter, Depends,File,UploadFile,Form,Request
 from fastapi.templating import Jinja2Templates
@@ -46,14 +46,11 @@ async def send_file(id:str):
 @filerouter.get("/file/extract/{id}", dependencies=[Depends(cookie)])
 async def send_file(id:str):
     path=f"files/{id}"
-    f = gzip.open(path, "rb")
-    files=f.read().decode()
-    f.close()
     file_location = f"files/extract/{id}"
-    f=open(file_location,"w")
-    f.write(files)
-    f.close()
-    return FileResponse(file_location, media_type='application/octet-stream', filename=id)
+    with gzip.open(path, 'rb') as f_in:
+        with open(file_location, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+            return FileResponse(file_location, media_type='application/octet-stream', filename=id)
 
 
 @filerouter.post("/removepermission", dependencies=[Depends(cookie)])
@@ -166,7 +163,8 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
 
                 permission.update_one({"username":filepermission['username']},newquery)
 
-        os.remove("files/"+file)
+        if(os.path.isfile("files/"+file)):
+            os.remove("files/"+file)
 
     return {"message":"success","statuscode":200}
 

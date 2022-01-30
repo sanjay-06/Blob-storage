@@ -36,7 +36,14 @@ pip install -r requirements.txt
 
 <br>
 
+### The sequence diagram for user authentication in the blob server
+<hr>
+<br>
+
+
 ### The starting page of the project is given by as screenshot
+
+![auth](screenshots/authentication.png)
 
 <hr>
 

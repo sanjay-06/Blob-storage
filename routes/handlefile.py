@@ -11,7 +11,8 @@ from models.Basicverifier import verifier
 from config.db import permission
 from routes.navigate import merge
 from schemas.permission import permissionsEntity,replacelist
-from pymediainfo import MediaInfo
+import mimetypes
+
 
 
 filerouter=APIRouter()
@@ -174,26 +175,30 @@ async def read_file(file:str,request : Request,session_data: SessionData = Depen
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     filename=file.lower()
     path="files/"+filename
-    exe=(os.path.splitext(file)[1])
-    if exe == '.txt' or exe == '.docx' or exe == '.xls' or exe=='.md':
+    filetype = mimetypes.guess_type(path)[0].split("/")[0]
+    if filetype == 'text':
           f = gzip.open(path, "rb")
           files=f.read().decode()
-          return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+          return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    elif filetype == 'image':
+        return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
     else:
-          return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+        return templates.TemplateResponse("showvideo.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 @filerouter.get("/writefile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
     filename=file.lower()
     path="files/"+filename
-    exe=(os.path.splitext(file)[1])
-    if exe == '.txt' or exe == '.docx' or exe == '.xls' or exe=='.md':
+    filetype = mimetypes.guess_type(path)[0].split("/")[0]
+    if filetype == 'text':
           f = gzip.open(path, "rb")
           files=f.read().decode()
           return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    elif filetype == 'image':
+        return templates.TemplateResponse("editimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
     else:
-          return templates.TemplateResponse("editimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+        return templates.TemplateResponse("editvideo.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 
 @filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])

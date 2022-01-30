@@ -27,7 +27,7 @@ async def del_session(response: Response, session_id: UUID = Depends(cookie)):
     print(session_id)
     await backend.delete(session_id)
     cookie.delete_from_response(response)
-    # shutil.rmtree("files/extract")
+    shutil.rmtree("files/extract")
     return RedirectResponse("/")
 
 @user.get("/whoami", dependencies=[Depends(cookie)])
@@ -50,6 +50,8 @@ async def login(response:Response,email:str = Form(...),password:str = Form(...)
      data = SessionData(user_token=token)
      await backend.create(session, data)
      cookie.attach_to_response(response, session)
+     if not os.path.isdir("files/extract"):
+        os.mkdir("files/extract")
      return {"access_token":token,"token_type":"bearer","statuscode":200}
 
 @user.post('/register')
@@ -69,6 +71,8 @@ async def create_user(response:Response,email:str= Form(...),password:str=Form(.
         data = SessionData(user_token=token)
         await backend.create(session, data)
         cookie.attach_to_response(response, session)
+        if not os.path.isdir("files/extract"):
+            os.mkdir("files/extract")
         return result
     else:
         return {"message":"user already exists","statuscode":409}

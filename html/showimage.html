@@ -44,6 +44,20 @@
           </div>
         </div>
       </nav>
+      <div class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" id="loginfail">
+        <strong class="font-bold">Update Failed!</strong>
+        <span class="block sm:inline" id="value">Some problem in updating the file</span>
+        <button class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="callclose('fail')"">
+            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"  /></svg>
+        </button>
+    </div>
+    <div class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert" id="loginsuccess">
+        <strong class="font-bold">Delete Success!</strong>
+        <span class="block sm:inline">Redirecting to your files</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="callclose('success')">
+            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+        </span>
+    </div>
       <!-- This example requires Tailwind CSS v2.0+ -->
 <div class="mt-10 ml-32 lg:flex lg:items-center lg:justify-between">
     <div class="flex-1 min-w-0">
@@ -75,6 +89,14 @@
       </div>
     </div>
   </div>
-  sorry currently we dont support image format
+  <form class="flex flex-col items-center justify-center modify mt-10" name="modify" class="modify" action="/modifyfile/{{filename}}">
+    <span class="font-bold text-center">Change Filename</span>
+ <div class="w-10/12">
+
+    <input type="text" name="filetitle" placeholder="filename" class="mt-1 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-2 shadow focus:outline-none focus:ring w-full" value="{{filename}}" disabled/>
+
+ </div>
+  </form>
+  sorry currently we dont support image format yet!
   </body>
 </html>

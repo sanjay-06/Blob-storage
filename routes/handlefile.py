@@ -172,43 +172,38 @@ async def handle_form(file:str,session_data: SessionData = Depends(verifier)):
 @filerouter.get("/readfile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
+    filename=file.lower()
+    path="files/"+filename
     exe=(os.path.splitext(file)[1])
-    print(exe)
-    path="files/"+file
-    print(imghdr.what(path))
-    fileInfo = MediaInfo.parse(path)
-    for track in fileInfo.tracks:
-        if track.track_type == "Video":
-            return templates.TemplateResponse("showimage.html",{"request":request,"video":path})
-        if imghdr.what(path) == None:
-            f = gzip.open(path, "rb")
-            files=f.read()
-            return templates.TemplateResponse("showfile.html",{"request":request,"username":payload['email'],"file":files.decode(),"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
-
-    print(path)
-    return templates.TemplateResponse("showimage.html",{"request":request,"image":path})
+    if exe == '.txt' or exe == '.docx' or exe == '.xls' or exe=='.md':
+          f = gzip.open(path, "rb")
+          files=f.read().decode()
+          return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    else:
+          return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 @filerouter.get("/writefile/{file}",response_class=HTMLResponse,dependencies=[Depends(cookie)])
 async def read_file(file:str,request : Request,session_data: SessionData = Depends(verifier)):
     payload=jwt.decode(session_data.user_token,oauth.get_jwtsecret(),algorithms=['HS256'])
-    path="files/"+file
-    fileInfo = MediaInfo.parse(path)
-    for track in fileInfo.tracks:
-        if track.track_type == "Video":
-            return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
-        if imghdr.what(path) == None:
-            f = gzip.open(path, "rb")
-            files=f.read().decode()
-            return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
-    return templates.TemplateResponse("showimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    filename=file.lower()
+    path="files/"+filename
+    exe=(os.path.splitext(file)[1])
+    if exe == '.txt' or exe == '.docx' or exe == '.xls' or exe=='.md':
+          f = gzip.open(path, "rb")
+          files=f.read().decode()
+          return templates.TemplateResponse("showwritefile.html",{"request":request,"username":payload['email'],"file":files,"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
+    else:
+          return templates.TemplateResponse("editimage.html",{"request":request,"username":payload['email'],"time":time.ctime(os.path.getctime("files/"+file)),"filename":file})
 
 
 @filerouter.post("/modifyfile/{file}",dependencies=[Depends(cookie)])
 async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
+
     path="files/"+file
-    f = gzip.open(path, "wb+")
-    f.write(textarea.encode())
-    f.close()
+    if textarea!='None':
+        f = gzip.open(path, "wb+")
+        f.write(textarea.encode())
+        f.close()
 
     if file != filetitle:
         path1="files/"+filetitle
@@ -234,3 +229,5 @@ async def handle_form(file:str,filetitle:str=Form(...),textarea:str=Form(...)):
         permission.update_one({"username":filepermission['username']},newquery)
 
     return {"message":"ok","statuscode":200}
+
+

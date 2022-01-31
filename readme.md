@@ -68,17 +68,6 @@ pip install -r requirements.txt
 
 ![sequence](screenshots/access.png)
 
-
-### The starting page of the project is given by as screenshot
+## Login and signup
 <hr>
-<br>
 
-```
-Login Page of the interface
-```
-![LOGIN](screenshots/login.png)
-
-```
-Signup Page of the interface
-```
-![SIGNUP](screenshots/signup.png)

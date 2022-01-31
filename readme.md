@@ -43,6 +43,32 @@ pip install -r requirements.txt
 
 ![auth](screenshots/authentication.png)
 
+<br>
+
+### The sequence diagram for upload file in the blob server
+<hr>
+<br>
+
+
+![auth](screenshots/uploadfile.png)
+
+<br>
+
+### The sequence diagram for permission update during upload in the blob server
+<hr>
+<br>
+
+
+![auth](screenshots/permissions.png)
+
+
+### The sequence diagram for sending files if user have access
+<hr>
+<br>
+
+![sequence](screenshots/access.png)
+
+
 ### The starting page of the project is given by as screenshot
 <hr>
 <br>

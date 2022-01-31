@@ -112,9 +112,10 @@ async def handle_form(filename:str=Form(...),select:str = Form(...),read:str = F
     if owner=="yes":
         queryresult["read"].append(filename)
         queryresult["write"].append(filename)
+        queryresult["owner"].append(filename)
         queryresult["read"]=list(set(queryresult["read"]))
         queryresult["write"]=list(set(queryresult["write"]))
-        queryresult["owner"].append(filename)
+
         queryresult["owner"]=list(set(queryresult["owner"]))
 
     queryresult.pop("id")

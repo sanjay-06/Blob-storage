@@ -11,10 +11,10 @@ The deployments specified in the github are actually just testing deployment for
 ## Video demo
 <hr>
 
-<a link="https://drive.google.com/file/d/1lz30E6yBoJuhEqPrC0y1hnbyPMZMkryv/view?usp=sharing">
+<a href="https://drive.google.com/file/d/1lz30E6yBoJuhEqPrC0y1hnbyPMZMkryv/view?usp=sharing">
 click here for Interface demo </a>
 
-<a link="https://drive.google.com/file/d/17m-heB4kAG_L02Vzbq26mrbkStjQP34U/view?usp=sharing">click here for Code walkthrough</a>
+<a href="https://drive.google.com/file/d/17m-heB4kAG_L02Vzbq26mrbkStjQP34U/view?usp=sharing">click here for Code walkthrough</a>
 
 ## Usage of package
 

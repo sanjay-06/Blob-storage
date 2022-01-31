@@ -64,16 +64,23 @@ async def send_file(filepermission:str=Form(...)):
     queryresult=permissionsEntity(queryresult)
 
     if access=="read":
+
         queryresult["read"].remove(file)
+
+        if file in queryresult["owner"]:
+         queryresult["owner"].remove(file)
+
+         if file in queryresult["write"]:
+             queryresult["write"].remove(file)
 
 
     if access=="edit":
-        queryresult["read"].remove(file)
         queryresult["write"].remove(file)
+        if file in queryresult["owner"]:
+          queryresult["owner"].remove(file)
+
 
     if access=="owner":
-        queryresult["read"].remove(file)
-        queryresult["write"].remove(file)
         queryresult["owner"].remove(file)
 
     queryresult.pop("id")

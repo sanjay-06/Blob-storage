@@ -2,7 +2,7 @@
 
 The link for the project deployed in Microsoft Asure cloud is given by:
 
-## <a href="http://20.185.234.212:8000/">click here for Demo</a>
+## <a href="http://20.185.234.212:8000/">click here for Demo</a> ( currently inactive )
 
 
 The deployments specified in the github are actually just testing deployment for frontend the actual deployment is done by the above link in Microsoft Azure cloud service platform
